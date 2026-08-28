@@ -1,0 +1,7 @@
+# revocation.rules — 吊销与级联(占位)
+# 删除不是操作,是语法
+
+rule warrant.born_with_handle     true
+rule revoke.cascade               "吊销血统 → 派生能力全灭"
+rule revoke.mesh_propagation      "≤ 1 心跳周期全网生效"
+rule revoke.space_reclaim         "血统不可达 → 空间回收"

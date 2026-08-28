@@ -1,0 +1,12 @@
+# /run — 瞬态层:重启即空,内容永不入库
+/run/enclaves/*
+/run/capabilities/*
+!/run/enclaves/.gitkeep
+!/run/capabilities/.gitkeep
+
+# /registry/cache — 内容寻址代码,可从网络重建
+/registry/cache/*
+!/registry/cache/.gitkeep
+
+# 运行时锁
+*.lock

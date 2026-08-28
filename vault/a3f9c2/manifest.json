@@ -1,0 +1,8 @@
+{
+  "lineage": "a3f9c2",
+  "born_of_warrant": "7f3a9c",
+  "content": [
+    { "name": "video.mp4", "cid": "PLACEHOLDER" }
+  ],
+  "addressing": "地址 = 内容哈希 × 血统 · 同内容异血统不去重"
+}

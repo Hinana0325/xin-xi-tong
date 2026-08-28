@@ -1,0 +1,13 @@
+{
+  "type": "standing",
+  "intent": "上报室温并按 20°C 目标调节",
+  "scope": {
+    "data": ["sensor://livingroom/temperature"],
+    "actuators": ["hvac://livingroom"]
+  },
+  "budget": { "writes_per_hour": 240 },
+  "expiry": "2027-08-28T00:00:00Z",
+  "proof": { "type": "heartbeat", "interval_min": 15 },
+  "revocation_handle": "PLACEHOLDER",
+  "user_sig": "PLACEHOLDER"
+}

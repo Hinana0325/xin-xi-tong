@@ -1,0 +1,6 @@
+# dual-sign.rules — 双签规则(占位)
+# 同级互不僭越:用户管意图,系统管完整性
+
+rule kernel.semantic_change  requires [user_sig, system_sig]
+rule kernel.memory_fix       requires [system_sig, proof:semantic_invariant]
+rule kernel.boot             verify constitution.sig

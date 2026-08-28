@@ -1,0 +1,9 @@
+# mint.rules — 铸造边界(占位)
+# 系统是唯一的能力铸币厂:只验签名,不听论证
+
+rule mint.requires_warrant   true
+rule mint.scope              "capability.scope ⊆ warrant.scope"
+rule mint.ttl                "capability.ttl ≤ warrant.ttl"
+rule mint.budget             "capability.budget ≤ warrant.budget"
+rule mint.lineage            "capability.lineage = warrant.lineage"
+rule mint.override           none

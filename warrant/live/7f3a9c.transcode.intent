@@ -1,0 +1,14 @@
+{
+  "type": "live",
+  "intent": "将这段视频压缩到 50MB 以内",
+  "intent_hash": "PLACEHOLDER",
+  "plan_digest": "PLACEHOLDER — 数据清单·服务清单·预算上限三件套",
+  "scope": {
+    "data": ["vault://a3f9c2/video.mp4"],
+    "services": ["registry://transcode"]
+  },
+  "budget": { "tokens": 1000, "egress_mb": 60 },
+  "ttl": 600,
+  "revocation_handle": "PLACEHOLDER",
+  "user_sig": "PLACEHOLDER — 硬件密钥签名,非口令"
+}

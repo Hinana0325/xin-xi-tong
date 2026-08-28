@@ -1,0 +1,9 @@
+{
+  "service": "transcode",
+  "vendor": "example-vendor",
+  "capabilities": ["ffmpeg:encode"],
+  "enclave": "tee:sev",
+  "statefulness": "none",
+  "data_view": "purpose-limited, contract-scoped",
+  "billing": "per-second"
+}

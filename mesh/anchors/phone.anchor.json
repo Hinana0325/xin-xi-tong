@@ -1,0 +1,7 @@
+{
+  "anchor": "phone",
+  "keys": "secure-enclave:ed25519",
+  "signs_for": ["watch", "gateway", "sensors"],
+  "migration": "hardware-key takeover of standing warrants",
+  "loss_policy": "peers degrade to read-only + local budget after timeout"
+}

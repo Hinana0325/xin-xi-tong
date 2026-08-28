@@ -1,0 +1,7 @@
+{
+  "device": "watch",
+  "role": "intent-entry",
+  "kernel": "slim, key anchored to phone",
+  "degraded_budget": "20 CNY / 10 MB offline",
+  "reconcile": "on reconnect, lineage-checked"
+}
