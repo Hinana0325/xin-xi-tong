@@ -24,3 +24,10 @@
 ## 删除语法
 
 删除不是操作,是语法:吊销血统 → 派生地址不可达 → 空间回收。
+
+## 技术规格
+
+- `spec/` — Rust 类型定义 crate(类型即规格:编译通过 ≡ 规格自洽)
+  - `crypto` `lineage` `warrant` `capability` `ledger` `kernel` `vault` `mesh` `registry` `run` `mind`
+  - `cargo check` 验证
+- `warrant-os-spec/` — 技术规格书 HTML(架构图、状态机、协议规范)
