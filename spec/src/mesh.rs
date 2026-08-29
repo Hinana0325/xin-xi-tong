@@ -111,7 +111,7 @@ pub struct MigrationRecord {
 ///
 /// 主权:用户(签名锚持有者)
 /// 寿命:随锚点迁移
-#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct Mesh {
     /// 已知设备
     pub peers: Vec<Peer>,
