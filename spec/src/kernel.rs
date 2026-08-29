@@ -182,7 +182,7 @@ impl ConstitutionAmendment {
     pub fn validate(&self) -> Result<(), AmendmentError> {
         match self.kind {
             AmendmentKind::SemanticChange => {
-                self.dual_sig.ok_or(AmendmentError::MissingDualSign).map(|_| ())
+                self.dual_sig.ok_or(AmendmentError::MissingDualSign)
             }
             AmendmentKind::MemorySafetyFix => {
                 self.invariant_proof
