@@ -1,5 +1,6 @@
-# mint.rules — 铸造边界(占位)
-# 系统是唯一的能力铸币厂:只验签名,不听论证
+# 功能: 铸造法 — 系统作为唯一能力铸币厂的边界规则
+# 作用: 每次能力铸造前逐条校验,任一不满足即拒绝铸造
+# 铁律: 只验签名,不听论证 — AI 呈报到嘴皮磨破也绕不过这里
 
 rule mint.requires_warrant   true
 rule mint.scope              "capability.scope ⊆ warrant.scope"

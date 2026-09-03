@@ -1,5 +1,5 @@
-# dual-sign.rules — 双签规则(占位)
-# 同级互不僭越:用户管意图,系统管完整性
+# 功能: 双签法 — 用户与系统两个最高权力的互不僭越规则
+# 作用: 定义哪些变更需要谁的签名,内核自身更新也不例外
 
 rule kernel.semantic_change  requires [user_sig, system_sig]
 rule kernel.memory_fix       requires [system_sig, proof:semantic_invariant]

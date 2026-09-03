@@ -1,5 +1,5 @@
-# revocation.rules — 吊销与级联(占位)
-# 删除不是操作,是语法
+# 功能: 吊销法 — 删除语法的执行规则
+# 作用: 删除不是操作而是语法:血统一灭,派生能力/地址全网级联失效
 
 rule warrant.born_with_handle     true
 rule revoke.cascade               "吊销血统 → 派生能力全灭"
