@@ -1,0 +1,8 @@
+# 功能: 同意法 — 审批界面的递归闭合规则
+# 作用: 解"审批界面自己也需要被审批"的死锁:同意 UI 属内核受信基,不走注册服务
+
+rule consent.ui           "由内核固定代码路径渲染,代码哈希列入 boot.chain 度量"
+rule consent.not_service  "同意 UI 不注册于 registry,不接受任何令状铸造请求"
+rule consent.input        "生物识别/硬件密钥事件直连内核驱动,不经 AI 转述"
+rule consent.ai_blind     "AI 只能提交计划文本,无法合成或拦截确认事件"
+rule consent.display      "计划三件套(数据·服务·预算)逐项强制显示,不可折叠"

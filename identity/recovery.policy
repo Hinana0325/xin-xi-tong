@@ -1,0 +1,9 @@
+# 功能: 密钥恢复策略 — 签名锚丢失后的主权寻回路径
+# 作用: 回答"锚丢了王国怎么办":社交恢复为主,兜底硬件为辅,恢复即全网格重铸
+
+policy recovery.social    "N-of-M 守护人(亲属/朋友各持一份恢复分片,PLACEHOLDER)"
+policy recovery.shards    "Shamir 3-of-5,分片出生时由根用户一次性签发"
+policy recovery.glass     "兜底:厂商玻璃破解,须延迟 72h + 全网格通知"
+policy recovery.effect    "新锚接管全部 standing 令状,旧锚心跳视为失证"
+policy recovery.freeze    "恢复期内 peers 维持降级态,不产生新血统"
+policy recovery.witness   "恢复全程写 ledger,守护人签名逐环留痕"

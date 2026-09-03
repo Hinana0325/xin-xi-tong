@@ -1,0 +1,16 @@
+# 功能: 锚位令状 — 创世纪的第一张令状,根用户授予自己签名锚地位
+# 作用: 完成自举闭环:创世注册产生身份,此令状产生权力;一切后续令状皆其血统后代
+# 特例: 全网格唯一无需母令状的 standing — 其合法性来自 genesis enrollment 本身
+
+{
+  "type": "standing",
+  "intent": "本机为网格签名锚,代各端点签署令状",
+  "scope": {
+    "signs_for": ["self", "enrolled_devices"]
+  },
+  "budget": { "warrants_per_day": 10000 },
+  "expiry": "never — 随锚存续,随恢复仪式灭失重生",
+  "proof": { "type": "enrollment.genesis + heartbeat" },
+  "revocation_handle": "recovery.policy 任一路径触发",
+  "user_sig": "PLACEHOLDER — 创世纪根用户第一签"
+}

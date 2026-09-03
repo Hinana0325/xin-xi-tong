@@ -1,0 +1,15 @@
+# 功能: 创世注册 — 第一个身份的诞生仪式,整条授权链的第一环
+# 作用: 空系统自举:无任何已存在令状可参照时,由此产生第一张令状的签名人
+# 语义: 开机即创世 — 首次持有硬件密钥并完成活体确认者,成为该网格的根用户
+
+{
+  "ceremony": "genesis-enrollment",
+  "precondition": "ledger 仅含 GENESIS,warrant/* 为空",
+  "root_user": {
+    "identity_key": "secure-enclave:ed25519, PLACEHOLDER",
+    "liveness": "biometric, PLACEHOLDER",
+    "blessed_by": "kernel constitution.sig"
+  },
+  "first_act": "根用户签发 anchor.standing,授予自己签名锚地位",
+  "irreversibility": "创世记录写入 ledger,不可重放 — 不可二次创世"
+}

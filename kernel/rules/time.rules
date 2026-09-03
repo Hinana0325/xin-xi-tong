@@ -1,0 +1,9 @@
+# 功能: 时间法 — 网格时间权威与账本排序规则
+# 作用: TTL 自毁 / expiry 到期 / 心跳间隔 / 预算窗口全部依赖时钟,此为时间之根
+
+rule time.source          "签名锚广播网格时间,ed25519 签名防伪造"
+rule time.drift           "端点晶振漂移容差 ±120s,超差以锚为准"
+rule time.offline         "离线端点冻结本地时钟,禁止凭本地时间触发 expiry"
+rule time.merge           "离线账回连合并:按 (锚时间, 序号) 字典序重排"
+rule time.conflict        "同血统同序号冲突 → 双条标 quarantined,升级用户仲裁"
+rule time.no_intent       "时间权威不依赖任何令状 — 它是内核服务,非注册服务"

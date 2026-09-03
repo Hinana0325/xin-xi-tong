@@ -1,0 +1,13 @@
+# 功能: 引导链 — 从硬件信任根到宪法内核的完整性传递路径
+# 作用: 回答"验证者的验证者":验签 constitution.sig 的代码本身由上一环验签
+# 对照: iOS Secure Boot 链 / Android AVB,每环验下一环,根在不可改的硬件熔丝
+
+step 1  hardware_root   "ROM 熔丝公钥,出厂烧录,物理不可改"
+step 2  boot_rom        "由熔丝验签的第一段加载器"
+step 3  boot_chain      "逐环验签,度量值扩展进 TPM PCR"
+step 4  kernel_image    "宪法内核镜像,含 constitution.sig"
+step 5  rules_root      "kernel/rules/* 默克尔根与封印比对"
+
+rule boot.fail_closed     true        # 任一环验签失败 → 拒绝引导,不降级
+rule boot.measure         "每环哈希扩展入 PCR,远程可证明"
+rule boot.anchor          "mesh 设备引导链由签名锚远程校验"
