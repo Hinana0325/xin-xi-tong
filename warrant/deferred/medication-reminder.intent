@@ -1,0 +1,19 @@
+# 功能: 延时令状 — "到点再执行"的意图载体
+# 作用: 签名发生在表达意图时,执行发生在网格时间到达时;期间用户可随时反悔
+# 区别: live 是"现在做",deferred 是"到点再做" — 授权与执行被时间轴拉开
+{
+  "type": "deferred",
+  "intent": "晚上八点提醒我吃药",
+  "trigger": {
+    "mode": "mesh-time",
+    "at": "19:00+08:00",
+    "catch_up": "missed → fire-on-reconnect"
+  },
+  "plan_digest": "PLACEHOLDER — 到点由 AI 现场呈报,三件套走 consent",
+  "scope": {
+    "services": ["registry://reminder"]
+  },
+  "budget": { "ops": 3 },
+  "ttl": 86400,
+  "revocation_handle": "PLACEHOLDER"
+}

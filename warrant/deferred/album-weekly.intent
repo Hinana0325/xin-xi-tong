@@ -1,0 +1,19 @@
+# 功能: 循环令状 — 周期性延时意图的载体
+# 作用: 一次签名覆盖长周期;内核把周期展开为离散唤醒序列,逐个触发呈报
+# 注意: 每次执行仍需走 consent(除非并入 standing 框架授权)
+{
+  "type": "deferred-recurring",
+  "intent": "每周三上午九点整理相册",
+  "trigger": {
+    "mode": "mesh-time",
+    "cron": "0 9 * * 3",
+    "expand": "内核展开为未来 8 周的离散预约序列"
+  },
+  "scope": {
+    "data": ["vault://photo-lineage/"],
+    "services": ["registry://album-organizer"]
+  },
+  "budget": { "runs": 8, "tokens_per_run": 500 },
+  "expiry": "2026-10-28T00:00:00Z",
+  "revocation_handle": "PLACEHOLDER"
+}

@@ -1,0 +1,10 @@
+# 功能: 唤醒法 — 延时意图的时钟触发规则,时间权威的直接应用
+# 作用: 到点唤醒的执行者必须是内核固定路径,杜绝"闹钟也是一种注册服务"的递归
+
+rule alarm.authority      "内核常驻唤醒服务,代码列入 boot.chain 度量"
+rule alarm.not_service    "不注册于 registry · 无血统 · 不接受令状铸造请求"
+rule alarm.fire           "网格时间到达 trigger_at → 唤醒 AI 呈报计划"
+rule alarm.plan           "计划仍走 consent 流程 — 唤醒 ≠ 授权"
+rule alarm.missed         "端点离线错过的唤醒,回连后按(锚时间,序号)立即补触发"
+rule alarm.cancel         "用户可随时撤销预约;吊销沿母令状血统级联"
+rule alarm.repeat         "循环意图(每周三)由内核展开为离散预约序列,逐个触发"
