@@ -1,0 +1,12 @@
+# 功能: 共享库房清单 — 多主权血统的出生证明
+# 作用: 血统的可见性单元从"单一主权"泛化为"主权集合";集合外依旧不可见
+# 泛化: 单用户血统 = 主权集合基数为一的特例,原不变量未被修改
+{
+  "lineage": "b7e1d0",
+  "sovereigns": ["@alice PLACEHOLDER", "@bob PLACEHOLDER"],
+  "born_of_warrant": "home-hvac.cosigned",
+  "content": [
+    { "name": "hvac-history.csv", "cid": "PLACEHOLDER" }
+  ],
+  "visibility": "主权集合内互可见 · 集合外不可见 · 跨集合不去重(防侧信道不变)"
+}

@@ -1,0 +1,15 @@
+# 功能: 访客令状 — 过客持有的短命授权,访客身份的全部权限
+# 作用: 访客零血统零锚,能力完全来自主权者的现场签发,TTL 到点自动消失
+# 约束: scope ⊆ 签发者当时能力 · 不可转授 · 不可升级为 standing
+{
+  "type": "live",
+  "intent": "客厅灯调至暖光",
+  "issuer": "PLACEHOLDER @alice",
+  "holder": "guest:charlie",
+  "scope": {
+    "actuators": ["light://livingroom/dim"]
+  },
+  "budget": { "ops": 10 },
+  "ttl": 3600,
+  "transferable": false
+}

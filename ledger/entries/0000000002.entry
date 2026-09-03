@@ -1,0 +1,7 @@
+# 功能: 总账条目 — 单个不可篡改的事件记录
+# 作用: 冲突裁决留痕:谁与谁在何资源上相抵,系统如何落子
+#0000000002
+prev:  0000000001
+event: warrant.conflict
+detail: "@alice 20°C ↔ @bob 22°C @ hvac://livingroom → 维持现状 · 冷却 60s"
+sig:   PLACEHOLDER

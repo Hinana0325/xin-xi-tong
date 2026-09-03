@@ -1,0 +1,12 @@
+# 功能: 共存法 — 多个"最高权力"在同一网格相遇时的裁决规则
+# 作用: 家庭/共享场景:双方令状对同一执行器冲突时如何落子,权力如何不对称分配
+
+rule domain.sovereigns      "网关内核公证 1..N 个签名锚,N=1 退化为单用户特例"
+rule conflict.detect        "同执行器 × 相异血统 × 重叠时间窗 = 冲突事件,写 ledger"
+rule conflict.resolve       "默认维持现状(现状偏好)· 冷却 60s 后可再议"
+rule conflict.escalate      "任一方可升级为联签令状 — 双方血统并列为母"
+rule safety.bypass          "安全类意图(火警/医疗/解锁)单方即可执行,事后追认"
+rule sovereign.admit        "增设主权者需现有主权全体联签"
+rule sovereign.expel        "移除主权者需除本人外全体联签;自退出随时"
+rule guest.subset           "访客令状 scope ⊆ 签发者当时能力 · TTL ≤ 24h · 不可转授"
+rule ward.cosign            "受监护者 standing 须监护人联签,live 免联签"

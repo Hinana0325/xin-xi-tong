@@ -1,0 +1,9 @@
+# 功能: 网关端点档案 — 域公证人,多主权共存的核心端点
+# 作用: 承载完整内核;公证 N 个签名锚;冲突事件在此裁决并写 ledger
+{
+  "device": "gateway",
+  "role": "domain-notary",
+  "kernel": "full · hosts coexistence arbitration",
+  "sovereigns_anchored": ["@alice PLACEHOLDER", "@bob PLACEHOLDER"],
+  "arbitrates": "conflict → status quo + ledger 事件"
+}

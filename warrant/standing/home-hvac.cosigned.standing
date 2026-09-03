@@ -1,0 +1,16 @@
+# 功能: 联签常设令状 — 家庭共享资源的授权载体
+# 作用: 共享执行器(HVAC/门锁)的常设授权,由全体受益主权联签生效
+# 不对称设计: 生效需全体共识,吊销只需任何一方 — 建立难,摧毁易
+{
+  "type": "standing",
+  "intent": "家庭温控:日间 20°C · 夜间 18°C",
+  "scope": {
+    "actuators": ["hvac://livingroom"],
+    "data": ["vault://b7e1d0/"]
+  },
+  "budget": { "writes_per_hour": 240 },
+  "expiry": "2027-08-28T00:00:00Z",
+  "proof": { "type": "heartbeat", "interval_min": 15 },
+  "revocation_handle": "任一联签方单方即可吊销",
+  "co_signers": ["PLACEHOLDER @alice", "PLACEHOLDER @bob"]
+}
