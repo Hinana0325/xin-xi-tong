@@ -1,0 +1,10 @@
+# 功能: 备份法 — 主权悖论的解:备份是血统的快照,不是数据的搬家
+# 作用: 五样持久物的编码打包与恢复;密码学保证恢复端无法窥探未授权血统
+
+rule backup.invariant    "打包 = kernel + ledger + vault + mind + warrant/standing"
+rule backup.format       "按血统分格加密:每格独立密钥,密钥链锚定身份密钥"
+rule backup.destination  "目的地自由(本盘/网盘/另一台网格设备)· 格式主权中立"
+rule backup.witness      "备份写入记 ledger backup.witness(去哪儿了记录,不含内容)"
+rule backup.restore      "恢复 = 创世纪重放:验证封印 → 重建账本 → 逐血统解封"
+rule backup.quarantine   "恢复的血统默认休眠,唤醒须锚设备活体确认(防旧备份复活已吊销令状)"
+rule backup.purpose      "备份是主权行为:目的地只见密文,系统永不在云端持有明文状态"

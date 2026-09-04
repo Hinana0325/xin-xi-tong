@@ -1,0 +1,13 @@
+# 功能: 旧格式适配服务 — 桥接旧世界的注册服务
+# 作用: 打开一份 .docx 不需要原生应用;解析器按普通服务规管(无特权)
+# 对照: 原生服务的全部纪律同样适用 — 零持有 · 目的受限 · 托管计费
+{
+  "service": "docx-reader",
+  "vendor": "example-vendor",
+  "capabilities": ["parse:docx", "render:text"],
+  "enclave": "tee:sandbox",
+  "statefulness": "none",
+  "data_view": "purpose-limited: parse requested document only",
+  "billing": { "mode": "per-doc", "contract": "settlement.rules" },
+  "legacy_note": "解析漏洞即服务漏洞 — 血统可追,飞地隔离"
+}

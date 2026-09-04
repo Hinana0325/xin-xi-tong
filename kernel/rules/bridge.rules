@@ -1,0 +1,9 @@
+# 功能: 桥接法 — 旧世界文件的进关与出关规则
+# 作用: .docx/.mp4 等外来格式如何进入网格;冷启动不靠原生应用,靠受控进口
+
+rule bridge.import       "导入 = 声明血统归属仪式:用户指认文件 → 复制成 vault 血统成员"
+rule bridge.quarantine   "导入文件先进 sandbox 飞地检视(元数据/夹带脚本),报告后入 vault"
+rule bridge.legacy_run   "旧格式处理 = registry 中的 legacy 适配服务,与原生服务同规:无特权"
+rule bridge.export       "导出 = 逐血统授权:导出令状限定文件集,水印可溯源血统"
+rule bridge.format       "格式知识(解析器)内容寻址,与数据同权 — 解析漏洞即服务漏洞,级联可追"
+rule bridge.no_native    "网格内不设'文件系统视图'给旧软件 — 旧软件要么适配,要么留在旧世界"

@@ -1,0 +1,11 @@
+# 功能: 心智法 — /mind 模型更新的准入与签名学
+# 作用: 闭合 AI 链路最后悬空的一环:投毒模型铸不出币,但能扭曲呈报 — 此为防线
+
+rule mind.update.gate     "权重更新 = 语义变更,分档准入(见下)"
+rule mind.tier.routine    "微调/知识更新: 附基准守恒证明(计划质量回归不降)→ 单签可过"
+rule mind.tier.major      "架构换代/新能力: 升格为 semantic_change — 双签"
+rule mind.tier.quarantine "更新后 72h 影子期:双模型并行,计划分歧率超阈 → 回滚"
+rule mind.canary          "重大更新后首批 N 张令状强制全审(关闭一瞥/免确认通道)"
+rule mind.provenance      "权重文件内容寻址入 ledger,血统 = 发布方签名链"
+rule mind.throttle        "每日至多 1 次例行更新 · 突发更新须活体确认"
+rule mind.whitelist       "更新源白名单栖 identity/,增删须用户单签"

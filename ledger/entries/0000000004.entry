@@ -1,0 +1,7 @@
+# 功能: 总账条目 — 单个不可篡改的事件记录
+# 作用: 首次备份见证留痕:记目的地与不变量清单,不含任何数据内容
+#0000000004
+prev:  0000000003
+event: backup.witness
+detail: "不变量五样 → 目的地 self-hosted-nas · 格式 per-lineage-sealed"
+sig:   PLACEHOLDER

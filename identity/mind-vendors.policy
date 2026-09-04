@@ -1,0 +1,8 @@
+# 功能: 模型源白名单 — /mind 更新来源的准入政策
+# 作用: 防投毒的第一道闸:更新只认白名单签名链,链外权重一律拒收
+
+vendor local-self    "本地自训/自微调 · 免签自由更新(仅走例行档)"
+vendor vendor-a      "PLACEHOLDER 签名密钥 · 供 major 档架构更新"
+vendor research-lab  "PLACEHOLDER 签名密钥 · 供例行档知识更新"
+policy default       "不在白名单 = 不可装载,无例外"
+policy add_remove    "白名单增删须用户单签(consent 呈报)"
