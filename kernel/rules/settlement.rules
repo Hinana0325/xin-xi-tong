@@ -1,0 +1,11 @@
+# 功能: 结算法 — 真实货币的授权与清算规则
+# 作用: 把 registry 的 billing 钩子接住;钱随令状走,预算即托管,无后付费
+
+rule pay.escrow         "铸造时按 warrant.budget 托管冻结,余额不足不铸 — 无后付费"
+rule pay.meter          "内核计量(秒/令牌/字节)· 服务商自报仅作对账参考,不作为扣款依据"
+rule pay.vendor_zero    "服务商零持有支付凭证 — 只见扣款见证,永不见钱包"
+rule pay.settle         "任务核销时结算:实耗划转,剩余解冻回流,写 ledger settle.close"
+rule pay.dispute        "结算后 7 天争议窗口,血统链逐环回放裁决,过窗即终局"
+rule pay.offline        "离线消耗计入降级预算托管上限,回连即结 — 欺骗空隙即敞口上限"
+rule pay.anonymity      "计量只记抽象单位与血统,不记数据内容 — 账单不是侧信道"
+rule pay.wallet         "支付凭证栖 identity/,硬件密钥签发划扣,大额须活体确认"

@@ -1,0 +1,8 @@
+# 功能: 总账条目 — 单个不可篡改的事件记录
+# 作用: 首笔结算留痕:实耗划转,剩余解冻,争议窗口开启
+#0000000003
+prev:  0000000002
+event: settle.close
+lineage: 7f3a9c
+detail: "transcode 实耗 420 令牌 · 托管 1000 · 余 580 解冻 · 争议窗口 7d"
+sig:   PLACEHOLDER

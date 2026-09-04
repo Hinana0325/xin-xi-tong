@@ -1,0 +1,11 @@
+# 功能: 钱包档案 — 支付凭证之根,用户的货币主权
+# 作用: 托管划扣的唯一源头;服务商只见见证,永不见凭证 — 数据零持有的金钱版
+{
+  "wallet_id": "PLACEHOLDER",
+  "instruments": [
+    { "type": "PLACEHOLDER", "sealed": "secure-enclave" }
+  ],
+  "escrow_source": "warrant.budget 铸造时自此处冻结,核销时回流",
+  "large_amount": "超限额须活体确认(胁迫防线)· 单日上限可设",
+  "vendor_view": "witness-of-charge only · 零凭证接触"
+}
