@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AI Agent</string>
+    <string name="input_hint">给 AI 下指令，或 /命令 直接执行</string>
+    <string name="send">发送</string>
+    <string name="settings">设置</string>
+    <string name="sync_apps">同步应用</string>
+</resources>

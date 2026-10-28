@@ -1,0 +1,31 @@
+#!/bin/busybox sh
+# 定制系统 rootfs init
+/bin/busybox --install -s /bin
+/bin/busybox mount -t proc proc /proc
+/bin/busybox mount -t sysfs sys /sys
+/bin/busybox mount -t devtmpfs dev /dev 2>/dev/null
+/bin/busybox mkdir -p /dev/pts /dev/shm
+/bin/busybox mount -t devpts devpts /dev/pts 2>/dev/null
+
+# Android 层：binderfs（内核 CONFIG_ANDROID_BINDERFS）
+if /bin/busybox grep -qw binder /proc/filesystems 2>/dev/null; then
+  /bin/busybox mkdir -p /dev/binderfs
+  /bin/busybox mount -t binder binder /dev/binderfs 2>/dev/null
+  for n in binder hwbinder vndbinder; do
+    [ -e "/dev/binderfs/$n" ] && /bin/busybox ln -sf "/dev/binderfs/$n" "/dev/$n"
+  done
+  echo "[android] binderfs: $(/bin/busybox ls /dev/binderfs 2>/dev/null | /bin/busybox tr '\n' ' ')"
+fi
+
+echo ""
+echo "=========================================="
+echo "  custom Linux 7.3  -  arm64 rootfs"
+echo "  kernel: $(/bin/busybox uname -r)"
+echo "=========================================="
+echo ""
+# 有 DRM/fbdev 时把横幅也写到 framebuffer console
+if [ -c /dev/tty0 ]; then
+  printf '\n\n  custom Linux 7.3  -  framebuffer console\n  kernel: %s\n\n' "$(/bin/busybox uname -r)" > /dev/tty0 2>/dev/null
+fi
+export PATH=/bin:/sbin
+exec /bin/busybox sh

@@ -1,0 +1,7 @@
+# NAME=Linux
+# VERSION=7.3-custom
+# 这里的内容会在 make-rootfs.sh 时进入 /etc/os-release
+
+NAME=Linux
+VERSION=7.3-custom
+PRETTY_NAME="Linux 7.3 (custom build)"
