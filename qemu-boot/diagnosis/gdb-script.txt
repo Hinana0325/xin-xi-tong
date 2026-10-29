@@ -1,0 +1,33 @@
+set pagination off
+set confirm off
+set architecture aarch64
+set $hitcount = 0
+set logging file gdb-transcript.txt
+set logging overwrite on
+set logging on
+echo === connecting to QEMU gdb stub ===\n
+target remote localhost:1234
+echo === hbreak at __arm64_sys_rt_tgsigqueueinfo (System.map 0xffffffc0804da3d4, nokaslr) ===\n
+hbreak *0xffffffc0804da3d4
+commands 1
+silent
+set $hitcount = $hitcount + 1
+printf "=== HIT %d pc=%lx x0(pt_regs)=%lx ===\n", $hitcount, $pc, $x0
+set $pregs = $x0
+printf "syscallno(pt_regs+280)=%d\n", *(int*)($pregs + 280)
+printf "args: a0(tgid)=%ld a1(tid)=%ld a2(sig)=%ld a3(uinfo)=%lx\n", *(long*)($pregs), *(long*)($pregs + 8), *(long*)($pregs + 16), *(long*)($pregs + 24)
+printf "pt_regs LR(+240)=%lx SP(+248)=%lx ELR(+256)=%lx PSTATE(+264)=%lx ORIG_X0(+272)=%lx\n", *(long*)($pregs + 240), *(long*)($pregs + 248), *(long*)($pregs + 256), *(long*)($pregs + 264), *(long*)($pregs + 272)
+echo --- regs[0..30] (x/31gx pt_regs) ---\n
+x/31gx $pregs
+if $hitcount == 1
+  python exec(open("/home/hatch/workspace/gdb-ptregs/stackwalk2.py").read())
+end
+echo --- disabling breakpoint 1, continuing guest ---\n
+disable 1
+continue
+end
+info breakpoints
+echo === continuing guest to panic ===\n
+continue
+echo \n=== END OF SCRIPT (gdb continue returned) ===\n
+quit

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  DRAFT — 未验证、未生效说明（必读）
+
+  本文件是为 QEMU virt 测试准备的特权权限白名单草案，目标路径为
+  /system/etc/permissions/privapp-permissions-cn.xinxitong.xml。
+
+  1. 本文件只列出 13 个自研应用的 AndroidManifest.xml 实际声明的权限中
+     唯一一个可能属于 signature|privileged 的权限：
+     cn.xinxitong.clock 声明的 android.permission.USE_EXACT_ALARM。
+     其余 12 个应用声明的权限（见 INTEGRATION.md 第 5 节完整清单）均不
+     属于 signature|privileged 权限，因此一律不列入本文件。
+  2. MANAGE_EXTERNAL_STORAGE（文件管理）故意不列入：它是 appop 门控权限，
+     需用户在“所有文件访问权限”设置里授予，白名单文件对它不起作用。
+  3. SCHEDULE_EXACT_ALARM（时钟）故意不列入：时钟应用已有该权限的降级
+     路径；它不需要白名单即可通过系统设置授予。
+  4. 本文件即使放进镜像，对未用平台密钥签名的 APK 也不授予任何权限。
+     GSI 为 release-keys 用户版构建，APK 只有 v2/v3 签名块（无 v1
+     META-INF 签名文件，已在 3 个 AOSP APK 上核实），签名证书身份
+     在本机未能核实（无 apksigner/Java）。只有与平台同密钥签名时，
+     白名单条目才可能生效；否则首次启动后需在 logcat 中核对
+     privapp-permissions 拒绝日志。
+  5. USE_EXACT_ALARM 的 protectionLevel 在本机未能从镜像中核实
+     （platform.xml 未定义该权限的级别）。在启用本文件前，必须在有
+     SDK 的机器上用 aapt2/apksigner 核实该权限确为
+     signature|privileged，否则本条目无意义，应删除。
+-->
+<permissions>
+    <privapp-permissions package="cn.xinxitong.clock">
+        <permission name="android.permission.USE_EXACT_ALARM"/>
+    </privapp-permissions>
+</permissions>

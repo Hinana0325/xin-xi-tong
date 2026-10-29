@@ -1,0 +1,55 @@
+The target architecture is set to "aarch64".
+Warning: 'set logging on', an alias for the command 'set logging enabled', is deprecated.
+Use 'set logging enabled on'.
+
+=== connecting to QEMU gdb stub ===
+warning: No executable has been specified and target does not support
+determining executable automatically.  Try using the "file" command.
+0x0000000040000000 in ?? ()
+=== hbreak at __arm64_sys_rt_tgsigqueueinfo (System.map 0xffffffc0804da3d4, nokaslr) ===
+Hardware assisted breakpoint 1 at 0xffffffc0804da3d4
+Num     Type           Disp Enb Address            What
+1       hw breakpoint  keep y   0xffffffc0804da3d4 
+        silent
+        set $hitcount = $hitcount + 1
+        printf "=== HIT %d pc=%lx x0(pt_regs)=%lx ===\n", $hitcount, $pc, $x0
+        set $pregs = $x0
+        printf "syscallno(pt_regs+280)=%d\n", *(int*)($pregs + 280)
+        printf "args: a0(tgid)=%ld a1(tid)=%ld a2(sig)=%ld a3(uinfo)=%lx\n", *(long*)($pregs), *(long*)($pregs + 8), *(long*)($pregs + 16), *(long*)($pregs + 24)
+        printf "pt_regs LR(+240)=%lx SP(+248)=%lx ELR(+256)=%lx PSTATE(+264)=%lx ORIG_X0(+272)=%lx\n", *(long*)($pregs + 240), *(long*)($pregs + 248), *(long*)($pregs + 256), *(long*)($pregs + 264), *(long*)($pregs + 272)
+        echo --- regs[0..30] (x/31gx pt_regs) ---\n
+        x/31gx $pregs
+        if $hitcount == 1
+          python exec(open("/home/hatch/workspace/gdb-ptregs/stackwalk2.py").read())
+        end
+        echo --- disabling breakpoint 1, continuing guest ---\n
+        disable 1
+        continue
+=== continuing guest to panic ===
+[Switching to Thread 1.2]
+=== HIT 1 pc=ffffffc0804da3d4 x0(pt_regs)=ffffffc082b0bec0 ===
+syscallno(pt_regs+280)=240
+args: a0(tgid)=1 a1(tid)=1 a2(sig)=6 a3(uinfo)=7ff9bffeb0
+pt_regs LR(+240)=7f8455c0f8 SP(+248)=7ff9bffeb0 ELR(+256)=7f8455c11c PSTATE(+264)=0 ORIG_X0(+272)=1
+--- regs[0..30] (x/31gx pt_regs) ---
+0xffffffc082b0bec0:	0x0000000000000001	0x0000000000000001
+0xffffffc082b0bed0:	0x0000000000000006	0x0000007ff9bffeb0
+0xffffffc082b0bee0:	0x71601f6d601f7264	0x71601f6d601f7264
+0xffffffc082b0bef0:	0x71601f6d601f7264	0x7f7f7f7f7f7f7f7f
+0xffffffc082b0bf00:	0x00000000000000f0	0x531f4c6bb0537bc2
+0xffffffc082b0bf10:	0x000000ff00000020	0x000000003b9ac9ff
+0xffffffc082b0bf20:	0x0000007f8bf2d000	0x000000007fffffff
+0xffffffc082b0bf30:	0x0000000000000506	0x0000000000000000
+0xffffffc082b0bf40:	0x0000007f845d6e98	0x0000007f845bc7c0
+0xffffffc082b0bf50:	0x0000007f8bb88000	0x0000000000000001
+0xffffffc082b0bf60:	0x0000000000000001	0x00000000ffffffff
+0xffffffc082b0bf70:	0xb400007e54413370	0x0000007f8be47e80
+0xffffffc082b0bf80:	0x0000000000000000	0x0000000000000000
+0xffffffc082b0bf90:	0x0000000000000000	0x0000000000000000
+0xffffffc082b0bfa0:	0x0000000000000000	0x0000007ff9bfff30
+0xffffffc082b0bfb0:	0x0000007f8455c0f8
+STACKWALK2-DONE sp=0x7ff9bffeb0 elr=0x7f8455c11c pages=2 pgd=0xffffff8006bcc000
+--- disabling breakpoint 1, continuing guest ---
+[Inferior 1 (process 1) exited normally]
+
+=== END OF SCRIPT (gdb continue returned) ===

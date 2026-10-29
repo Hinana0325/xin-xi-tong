@@ -1,0 +1,3 @@
+; Minimal versioned public platform policy placeholder.
+; The vendor policy declares no rules referencing versioned public
+; types, so no versioned declarations are required for compilation.

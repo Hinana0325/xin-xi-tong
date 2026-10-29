@@ -1,0 +1,25 @@
+== boot.img (file_size=53567488) ==
+  magic = b'ANDROID!'
+  kernel_size = 44329472
+  kernel_addr = 0x40200000 (1075838976)
+  ramdisk_size = 9229914
+  ramdisk_addr = 0x44000000 (1140850688)
+  second_size = 0
+  second_addr = 0x00000000 (0)
+  tags_addr = 0x40000100 (1073742080)
+  page_size = 4096
+  header_version = 4
+  os_version = 0x220001aa
+  name = ''
+  cmdline = 'console=ttyAMA0,115200 androidboot.console=ttyAMA0 androidboot.hardware=qemu androidboot.selinux=permissive androidboot.verifiedbootstate=orange androidboot.vbmeta.device=none printk.devkmsg=on'
+  id = '8a2e144f365bc842966571cfb3d086382f7eb129000000000000000000000000'
+  extra_cmdline = ''
+  recovery_dtbo_size = 0
+  recovery_dtbo_offset = 0
+  header_size = 1660
+  dtb_size = 0
+  dtb_addr = 0x00000000 (0)
+  section kernel: offset=4096 size=44329472
+  section ramdisk: offset=44335104 size=9229914
+  section second: offset=53567488 size=0
+  checks: OK

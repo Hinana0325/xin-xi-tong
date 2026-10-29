@@ -1,0 +1,2 @@
+; Minimal vendor policy for a vendor-less QEMU virt target.
+; No vendor HALs exist on this target; no vendor rules are declared.
