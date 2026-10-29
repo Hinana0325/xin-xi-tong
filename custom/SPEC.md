@@ -1,61 +1,124 @@
 # 定制 Android 系统（PocketVM 专用）
 
-目标：在 PocketVM 虚拟机里运行一个**厂商式定制 Android**：
+目标：在 PocketVM 虚拟机里运行一个**厂商式定制 Android**，机主通过 AI 控制手机。
 
-- 保留 **root**
-- 两个用户：**机主**（owner）与 **AI**
-- 机主通过 AI 控制手机
-- 两个用户**共用全部已安装应用**
-- 当前主要适配 PocketVM 的 arm64 虚拟机
+- **单用户**：只有机主一个 Android 用户（user 0），不建 AI 用户，不做双用户应用同步。
+- **特权 Agent**：AI 控制 Agent 是预装的特权应用（priv-app），在同一个用户内执行机主指令；权限按需白名单给，不给整机 root。
+- 当前主要适配 PocketVM 的 arm64 虚拟机。
 
-镜像在你的构建平台编译；本目录只放**与镜像解耦的定制逻辑**：AI 控制 Agent（APK）、双用户/应用共享脚本、以及给镜像构建用的集成说明。
+镜像在你的构建平台编译；本目录只放**与镜像解耦的定制逻辑**：AI 控制 Agent（APK）与给镜像构建用的集成说明。
+
+> 本次修订只改 SPEC，代码未动。旧的双用户脚本与同步逻辑见文末“已废弃”一节，后续按本 SPEC 重构代码时再删。
 
 ## 目录
 
 ```
 custom/
-├── SPEC.md                 # 设计规格（用户模型/权限/共享/集成点）
+├── SPEC.md                 # 设计规格（用户模型/权限/执行模型/集成点）
 ├── agent/                  # AI 控制 Agent（独立 Gradle 工程，可单独编 APK）
-└── scripts/                # 双用户与应用共享的 root 脚本
+└── scripts/                # 已废弃的双用户脚本（见文末，待删除）
 ```
 
 ## 角色与模型
 
-| 角色 | Android 用户 | 职责 |
+| 角色 | 位置 | 职责 |
 |---|---|---|
-| 机主 | user 0 | 日常使用；通过聊天界面给 AI 下指令 |
-| AI | 次级用户（建议 id 10） | 承载 AI 的身份与数据；以 root/系统权限执行机主指令 |
+| 机主 | user 0，唯一用户 | 日常使用；在 Agent 聊天界面下指令、确认敏感操作 |
+| AI Agent | user 0 内的 priv-app | 解析指令，按白名单执行；不代表机主持有另一套账号和数据 |
 
-- AI 不是“另一个桌面用户”，而是一个**有独立用户空间的执行身份**；机主不需要切换到 AI 用户。
-- 机主侧的聊天 UI 运行在 user 0；Agent 通过 `su` 跨用户执行（`am start --user 0`、`input`、`settings` 等）。
-- 两用户共用应用：系统服务/脚本把 user 0 的应用 `pm install-existing --user <ai>`，反向也同步，保证应用清单一致；应用数据仍按 Android 原生隔离（除非后续做共享数据扩展）。
+- Agent 和机主用同一套应用、同一份应用数据：AI 操作的就是机主自己的应用，不存在“AI 用户的应用清单”。
+- 不需要切换用户、不需要后台用户保活、不需要应用同步。后台用户限制、多用户应用兼容性问题随之消失。
+- 代价要说清楚：Agent 出问题的影响范围就是机主本人的用户空间，没有第二道用户隔离墙。所以执行模型必须用白名单 + 确认来兜底，不能靠“换个用户就安全了”来自我安慰。
 
-## Root
+## 权限模型：特权应用，不给整机 root
 
-- 镜像需为 **userdebug/eng** 构建并带 `su`（或后续集成 Magisk）；`ro.debuggable=1`。
-- Agent 只在“允许 root 执行”开启时调用 `su -c`；命令与输出在聊天界面留痕。
-- SELinux 建议 permissive（仅 VM 用途），或在镜像里为 Agent 加域。
+Agent 预装到 `system/priv-app/AiAgent/`（或 product 分区），并在 `privapp-permissions` 白名单里逐项列出权限。只给下面三类，按需取用，名单以目标 AOSP 版本实测为准：
+
+1. **普通权限**：`INTERNET`（只用于调 LLM 端点）。
+2. **特权权限**（priv-app + 白名单才授予）：例如 `WRITE_SECURE_SETTINGS`、`DUMP`；需要哪个、为什么需要，在白名单里写清理由，不用的不列。
+3. **用户在设置里显式授予的权限**：无障碍服务（界面操作首选）、`PACKAGE_USAGE_STATS`、悬浮窗等；Agent 不得静默自授，必须走系统设置界面由机主开启。
+
+明确不给的权限：
+
+- 不需要、也不申请 `INTERACT_ACROSS_USERS` / 跨用户类权限——单用户设计里没有跨用户操作。
+- 不以 `su` 作为主要执行手段。`su` 只在 userdebug/eng 的 VM 调试环境里作兜底，且同样走白名单（见下节）；没有 `su` 时 Agent 降级为纯特权应用能力，不得因此绕过白名单。
+
+SELinux：优先 enforcing 并为 Agent 配域；permissive 只允许在 VM 调试时临时使用，不得写进正式设计假设。
+
+## 执行模型：结构化意图 + 白名单，LLM 不直接拼 shell
+
+这是本设计的核心约束。LLM 只能返回结构化意图，Agent 在本地校验后才执行；**LLM 返回的自由文本永远不能直接变成 shell 命令**。
+
+### 1. 意图格式
+
+模型只允许返回以下 JSON 之一（不要 Markdown 代码块、不要多余文字）：
+
+```json
+{"action":"reply","text":"<回复机主的话>"}
+{"action":"launch","package":"<已安装包名>"}
+{"action":"tap","target":"<无障碍节点标识，如文本/描述>"}
+{"action":"input_text","text":"<要输入的文本>"}
+{"action":"setting","namespace":"system|secure|global","key":"<白名单内的键>","value":"<值>"}
+{"action":"query","template":"<白名单内的只读模板名>","params":{}}
+```
+
+未知 `action`、缺字段、字段类型不对、包名不在已安装列表里、白名单外 `key`/模板——一律拒绝执行，只把拒绝原因展示给机主。
+
+### 2. 白名单
+
+- **只读查询**：只允许预先登记的模板（如 `dumpsys` 的指定子命令、`pm list packages`、`getprop` 的指定键），参数用白名单字符集校验，禁止 `;`、`&`、`|`、`$()`、反引号、重定向等 shell 元字符拼接。
+- **界面操作**：优先用无障碍服务按节点操作；坐标点击只作兜底，坐标必须来自无障碍节点边界或屏幕范围内，LLM 随口报的坐标不直接采用。
+- **设置修改**：`setting` 的键必须在白名单内逐项登记；白名单外的键一律拒绝。
+- **禁止类**：格式化、删除系统文件、卸载系统应用、改账号密码、发短信/邮件、支付相关、恢复出厂设置——除非机主在确认对话框里明确点确认，且该操作本身在白名单内；LLM 自己不能替机主确认。
+
+### 3. 确认分级
+
+| 等级 | 操作 | 处理 |
+|---|---|---|
+| 只读 | 查询、打开应用、纯回复 | 直接执行，只记日志 |
+| 可逆 | 界面点击、输入、亮度等普通设置 | 直接执行，只记日志 |
+| 敏感 | 删除、卸载、发送/分享、改网络与账号类设置 | 必须弹出确认框，机主点确认才执行；LLM 的回复不能代替确认 |
+
+### 4. 机主直接命令
+
+聊天框以 `/` 开头的输入，仍走同一套意图校验和白名单，不绕过；敏感操作同样要确认。它是给机主的快捷入口，不是给模型的后门。
+
+### 5. 日志与密钥
+
+- 每条意图、参数、执行结果、拒绝原因都写入应用私有日志，可在界面查看；日志里不记 API key 和完整请求体。
+- API key 不得明文存 SharedPreferences：用 AndroidKeyStore  backing 的加密存储；端点只允许 `https`，`usesCleartextTraffic=false`。
+- 对话历史长度设上限，避免无界增长；LLM 请求超时、返回异常时展示错误原文（截断），不得把错误文本当 JSON 解析执行。
 
 ## AI 控制流程
 
-1. 机主在 Agent 聊天框输入自然语言（或 `/命令` 直接执行）。
-2. Agent 把对话与“系统操作员”提示词发给 OpenAI 兼容端点（可配置 base URL / key / model，默认国内可用服务）。
-3. 模型只允许返回两种 JSON：
-   - `{"action":"shell","command":"..."}`：在 user 0 上以 root 执行；
-   - `{"action":"reply","text":"..."}`：纯文本回复。
-4. Agent 执行后把结果回灌给模型或直接展示；所有命令与输出写入聊天记录。
+1. 机主在 Agent 聊天框输入自然语言。
+2. Agent 把对话与“系统操作员”提示词发给 OpenAI 兼容端点（可配置 base URL / key / model，默认国内可用服务；base URL 必须为 `https`）。
+3. 模型返回结构化意图 JSON；Agent 按上节校验、白名单、确认分级处理。
+4. 执行结果回显给机主；所有意图与输出写入聊天记录与私有日志。
+
+提示词里不得写“可以执行任意命令”之类的兜底表述；提示词只描述允许的意图格式，白名单是代码里的硬约束，不是提示词里的软约定。
 
 ## 镜像集成点（你编译时合并）
 
-1. **多用户**：`frameworks/base/core/res/res/values/config.xml` 中 `config_multiuserMaximumUsers` ≥ 2，`config_enableMultiUserUI=true`；首次开机创建 AI 用户（或首启脚本调用 `pm create-user`）。
-2. **预装 Agent**：把 `custom/agent` 编出的 APK 放到 `system/priv-app/AiAgent/`（或 product），加 `privapp-permissions` 白名单（INTERNET；如需系统级操作再加 `android.permission.INTERACT_ACROSS_USERS` 等）。
-3. **root**：userdebug 构建保留 `su`；或在 product 里加 su 包。
-4. **应用共享**：在 `init.rc`/首启服务里运行 `custom/scripts/sync-packages.sh`（需 root），或把逻辑做成系统服务定时同步。
-5. **镜像**：PocketVM 侧按现有 Android（ARM64）磁盘导入路径使用；显示链路是当前已知硬阻塞（goldfish/gfxstream HAL），需在镜像侧换 DRM/软件 GL 方案后才能出画面。
+1. **预装 Agent**：把 `custom/agent` 编出的 APK 放到 `system/priv-app/AiAgent/`（或 product），加 `privapp-permissions` 白名单（见“权限模型”）；无障碍服务需在镜像里声明，首次使用由机主在设置里开启。
+2. **不做多用户配置**：不需要改 `config_multiuserMaximumUsers`，不需要 `pm create-user`，不需要首启建用户脚本。
+3. **root（仅调试兜底）**：userdebug 构建保留 `su` 仅供调试；正式路径不依赖 `su`。
+4. **镜像**：PocketVM 侧按现有 Android（ARM64）磁盘导入路径使用；显示链路是当前已知硬阻塞（goldfish/gfxstream HAL），需在镜像侧换 DRM/软件 GL 方案后才能出画面。
 
 ## 里程碑
 
-1. Agent APK 可编、可装（普通应用 + su 原型） ✅ 本目录代码
-2. 在 root 环境验证：创建 AI 用户、双向同步应用、跨用户启动应用
-3. 镜像侧集成：预装、权限、首启脚本、root
+1. Agent APK 可编、可装（priv-app 原型 + 白名单执行模型）——按本 SPEC 重构现有代码
+2. 在 VM 环境验证：意图校验与拒绝、白名单查询、确认分级、无障碍界面操作、日志留痕
+3. 镜像侧集成：预装、privapp-permissions 白名单、无障碍声明、root 仅作调试兜底
 4. PocketVM 显示链路（独立平台工程）
+
+## 已废弃：双用户设计（不再采用）
+
+以下内容随本次修订废弃，代码后续重构时删除，SPEC 不再以它们为准：
+
+- 双用户模型（机主 user 0 + AI 次级用户）、`pm create-user` 建 AI 用户；
+- 双向应用同步：`custom/scripts/sync-packages.sh`、`custom/scripts/create-ai-user.sh`、`PackageSync` 与 Agent 界面的同步按钮；
+- 跨用户执行（`am start --user`、跨用户 `su` 调用）与 `INTERACT_ACROSS_USERS` 权限需求；
+- “Agent 只在允许 root 执行时调用 `su -c` 执行模型自由文本命令”的旧流程。
+
+废弃原因：单用户特权 Agent 已能覆盖“AI 操作机主自己的应用”这一目标；双用户只在“AI 需用另一套账号登录同一应用”时才有价值，而那不是当前目标，付出的同步与后台用户成本不值得。

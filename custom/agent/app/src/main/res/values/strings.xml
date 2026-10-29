@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AI Agent</string>
-    <string name="input_hint">给 AI 下指令，或 /命令 直接执行</string>
+    <string name="input_hint">给 AI 下指令；敏感操作需确认</string>
     <string name="send">发送</string>
     <string name="settings">设置</string>
-    <string name="sync_apps">同步应用</string>
+    <string name="view_log">查看日志</string>
+    <string name="accessibility_service_label">AI Agent 界面操作</string>
+    <string name="accessibility_service_description">供 AI Agent 按界面元素执行点击与输入（仅在机主下指令并通过白名单校验后）。需机主手动开启。</string>
 </resources>

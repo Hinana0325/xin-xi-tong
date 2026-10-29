@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  priv-app 权限白名单（QEMU virt 镜像集成用）。
+  复制到镜像的 etc/permissions/ 目录（system 或 product 分区，见 INTEGRATION.md）。
+  只列出重构后 Agent 实际声明且需要的特权权限，并写清理由；
+  不用的权限不列，列了也不等于自动授予——仍需 priv-app 安装位置配合。
+-->
+<privapp-permissions package="dev.pocketvm.aiagent">
+    <!-- 只读查询（dumpsys battery 等白名单模板）：QueryRunner 不走 su，靠 DUMP 权限。 -->
+    <permission name="android.permission.DUMP" />
+</privapp-permissions>
+<!--
+  明确未列出的权限（按 SPEC 不申请）：
+  - android.permission.INTERACT_ACROSS_USERS：单用户设计，没有跨用户操作。
+  - android.permission.WRITE_SECURE_SETTINGS：secure/global 设置键目前没有任何登记项，不申请。
+  - android.permission.WRITE_SETTINGS：普通（appop）权限，机主在系统设置中授予，不走 priv-app 白名单。
+-->

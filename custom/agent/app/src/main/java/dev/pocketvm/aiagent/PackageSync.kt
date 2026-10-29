@@ -1,32 +1,15 @@
 package dev.pocketvm.aiagent
 
-/** 机主（user 0）与 AI 用户之间的应用清单双向同步。 */
+/**
+ * 已废弃：双用户应用同步（SPEC「已废弃：双用户设计」）。
+ *
+ * 单用户设计下机主与 Agent 用同一套应用、同一份数据，不需要跨用户同步，
+ * 也不需要 INTERACT_ACROSS_USERS 与跨用户 su 调用。本文件仅保留以便查阅，
+ * 不得调用：syncBoth 不再执行任何命令，只返回废弃说明。
+ * 后续清理时可整个删除本文件（SPEC 亦已注明）。
+ */
+@Deprecated("双用户同步已废弃：单用户设计不需要跨用户应用同步")
 object PackageSync {
-    private fun packages(user: Int): Set<String> =
-        RootShell.run("pm list packages --user $user")
-            .lineSequence()
-            .map { it.trim().removePrefix("package:") }
-            .filter { it.isNotEmpty() && !it.startsWith("执行失败") }
-            .toSet()
-
-    fun syncBoth(aiUser: Int): String {
-        val owner = packages(0)
-        val ai = packages(aiUser)
-        if (owner.isEmpty() || ai.isEmpty()) {
-            return "读取应用列表失败（owner=${owner.size}，ai=${ai.size}）；请确认 root 与用户 $aiUser 存在"
-        }
-        val toAi = owner - ai
-        val toOwner = ai - owner
-        val sb = StringBuilder()
-        for (p in toAi) {
-            val r = RootShell.run("pm install-existing --user $aiUser $p").trim()
-            sb.append("→ AI   $p  ${r.take(60)}\n")
-        }
-        for (p in toOwner) {
-            val r = RootShell.run("pm install-existing --user 0 $p").trim()
-            sb.append("→ 机主 $p  ${r.take(60)}\n")
-        }
-        sb.append("完成：机主 ${owner.size} 个应用，AI ${ai.size} 个，补装 ${toAi.size + toOwner.size} 个")
-        return sb.toString()
-    }
+    fun syncBoth(aiUser: Int): String =
+        "已废弃：双用户应用同步不再使用（单用户设计，user 0 唯一用户）。未执行任何操作。"
 }

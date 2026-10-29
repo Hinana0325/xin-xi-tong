@@ -30,5 +30,7 @@ android {
 }
 
 dependencies {
-    // 只用平台 API（org.json / HttpURLConnection / su），不引入第三方依赖
+    // 仍只用平台 API（org.json / HttpURLConnection / AndroidKeyStore / 无障碍服务），
+    // 不引入第三方运行时依赖；加密存储用 Keystore 自实现（见 SecurePrefs）。
+    testImplementation("junit:junit:4.13.2")
 }
